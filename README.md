@@ -74,3 +74,13 @@ src/
 - **Mock API:** Simulates realistic behavior and error cases with MSW
 
 ---
+## 💡 Screenshots
+**Initial Screen**
+![image](https://github.com/user-attachments/assets/276a28c7-e254-475d-b36f-1c44981bdb90)
+**CSV with errors**
+![image](https://github.com/user-attachments/assets/03d374f4-9856-44c7-b6d1-ec768e56e6ed)
+**fixed CSV**
+![image](https://github.com/user-attachments/assets/a7481683-c785-4fb1-9fc2-ea3bbc0a5c6a)
+
+
+---
