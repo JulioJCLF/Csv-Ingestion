@@ -1,19 +1,13 @@
 import { http } from 'msw'
 import { parse } from 'papaparse'
 import { z } from 'zod'
-import { isValid, parseISO } from 'date-fns'
 
 const claimSchema = z.object({
   claimId: z.string().min(1),
   memberId: z.string().min(1),
-  serviceDate: z.string().refine(val => isValid(parseISO(val)), {
-    message: 'Invalid date',
-  }),
-  totalAmount: z.string().refine(val => {
-    const num = parseInt(val)
-    return !isNaN(num) && num > 0
-  }, {
-    message: 'Invalid totalAmount (not a positive integer)',
+  serviceDate: z.date({coerce: true}),
+  totalAmount: z.number({coerce: true}).positive({
+    message: 'Invalid totalAmount (not a positive number)',
   }),
   diagnosisCodes: z.string().optional(),
 })
@@ -34,7 +28,7 @@ export const handlers = [
     const file = formData.get('file') as File
     const text = await file.text()
     
-    const parsed = parse(text, {
+    const parsed = parse<{claimId: string, memberId: string, serviceDate: string, totalAmount: string, diagnosisCodes?: string}>(text, {
       header: true,
       skipEmptyLines: true,
     })
@@ -42,12 +36,14 @@ export const handlers = [
     const validClaims: Claim[] = []
     const invalidClaims: InvalidClaim[] = []
 
-    parsed.data.forEach((row: any, index: number) => {
+    const ids = parsed.data.map((row) => row.claimId)
+    parsed.data.forEach((row, index) => {
       const result = claimSchema.safeParse(row)
       if (!result.success) {
         const errors = result.error.errors.map(err =>
           `${err.path.join('.')}: ${err.message}`
         )
+
        
         invalidClaims.push({
           rowData: row,
@@ -55,7 +51,16 @@ export const handlers = [
           errors
         })
       } else {
-        validClaims.push(result.data)
+        const idsCount = ids.filter(id => id === result.data.claimId).length
+        if (idsCount > 1) {
+          invalidClaims.push({
+            rowData: row,
+            row: index + 2,
+            errors: ['Duplicate claimId']
+          })
+        } else {
+          validClaims.push(result.data)
+        }
       }
     })
 

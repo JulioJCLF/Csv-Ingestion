@@ -21,6 +21,7 @@ export default function UploadForm({ onSuccess = () => { } }: { onSuccess?: () =
     setResult(null)
     try {
       const res = await uploadClaims(file)
+      
       setResult(res)
       if (res.errorCount === 0) {
         onSuccess()
@@ -76,9 +77,6 @@ export default function UploadForm({ onSuccess = () => { } }: { onSuccess?: () =
 
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-gray-800/20 rounded-xl backdrop-blur-sm">
-                <Upload className="w-6 h-6 text-gray-800" />
-              </div>
               <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
                 Upload Claims Data
               </h2>
