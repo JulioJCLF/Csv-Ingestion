@@ -1,54 +1,86 @@
-# React + TypeScript + Vite
+# 🩺 Daily Claims CSV Ingestion – Front-End Take-Home Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a front-end solution for ingesting and reviewing healthcare claim data from a daily CSV export. The tool allows for CSV upload, validation, and browsing of claims with filters, sorting, and summary insights.
 
-Currently, two official plugins are available:
+## 🚀 Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React + Vite** – Fast front-end tooling
+- **TypeScript** – Safer, scalable code
+- **shadcn/ui** – Beautiful and accessible UI components
+- **Tailwind CSS** – Utility-first styling
+- **Framer Motion** – Smooth UI animations
+- **MSW (Mock Service Worker)** – Local API mocking for realistic UX
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📦 Setup Instructions
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+# 1. Clone the repo
+git clone (https://github.com/JulioJCLF/Csv-Ingestion.git)
+cd Csv-Ingestion
+
+# 2. Install dependencies
+yarn install
+
+# 3. Run the app
+yarn dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+This will start the Vite dev server at `http://localhost:5173` with the mock API (via MSW) enabled.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+## 📂 Project Structure
+
+```bash
+src/
+├── components/         # UI Components (UploadForm, ClaimTable)
+├── lib/                # Utility code (API, CSV parsing, mock handlers)
+├── mocks/              # MSW setup for mocking API endpoints
+├── pages/              # Main app/page entry (App.tsx)
+└── styles/             # Tailwind config, global styles
 ```
+
+---
+
+## 📁 Features
+
+### ✅ Upload and Ingest CSV
+- Validates file contents (required fields, date format, positive integer amounts)
+- Displays success/error summary with row-level feedback
+
+### 🧾 Table of Claims
+- View all successfully ingested claims
+- Sort by `totalAmount`, `serviceDate`
+- Filter by `memberId`, `startDate`, `endDate`
+- Displays total value of filtered claims (in dollars)
+
+### 🧪 Mocked Backend
+- `POST /claims/upload` handles CSV and returns validation results
+- `GET /claims` supports filter parameters
+
+---
+
+## 💡 Architecture Notes
+
+- **CSV Parsing:** Done client-side using `papaparse`
+- **Validation Rules:**
+  - Required: `claimId`, `memberId`, `totalAmount`, `serviceDate`
+  - Optional: `diagnosisCodes`
+  - `totalAmount` must be a positive integer
+  - `serviceDate` must be a valid date (ISO)
+- **State Management:** Local state using React hooks
+- **Mock API:** Simulates realistic behavior and error cases with MSW
+
+---
+## 💡 Screenshots
+**Initial Screen**
+![image](https://github.com/user-attachments/assets/276a28c7-e254-475d-b36f-1c44981bdb90)
+**CSV with errors**
+![image](https://github.com/user-attachments/assets/03d374f4-9856-44c7-b6d1-ec768e56e6ed)
+**fixed CSV**
+![image](https://github.com/user-attachments/assets/a7481683-c785-4fb1-9fc2-ea3bbc0a5c6a)
+
+
+---
