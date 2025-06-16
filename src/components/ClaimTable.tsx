@@ -86,7 +86,7 @@ export default function ClaimTable() {
 
   useEffect(() => {
     load();
-  });
+  }, [filters]);
 
   const handleFilterChange = (key: string, value: string) => {
     setFilters((f) => ({ ...f, [key]: value }));
