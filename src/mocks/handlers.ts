@@ -31,8 +31,8 @@ export const handlers = [
     const parsed = parse<{
       claimId: string;
       memberId: string;
-      serviceDate: string;
-      totalAmount: string;
+      serviceDate: Date;
+      totalAmount: number;
       diagnosisCodes?: string;
     }>(text, {
       header: true,
