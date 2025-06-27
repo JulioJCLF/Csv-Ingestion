@@ -15,7 +15,7 @@ const claimSchema = z.object({
 type Claim = z.infer<typeof claimSchema>;
 
 type InvalidClaim = {
-  rowData: any;
+  rowData: Claim;
   row: number;
   errors: string[];
 };

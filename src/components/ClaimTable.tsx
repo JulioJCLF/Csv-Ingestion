@@ -7,11 +7,15 @@ import {
   Loader2,
   Search,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
-const fetchClaims = async (filters: any) => {
+const fetchClaims = async (filters:   {
+  memberId?: string;
+  startDate?: string;
+  endDate?: string;
+}) => {
   const params = new URLSearchParams();
 
   if (filters.memberId) {
@@ -70,7 +74,7 @@ export default function ClaimTable() {
     direction: "asc",
   });
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -82,11 +86,11 @@ export default function ClaimTable() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
 
   useEffect(() => {
     load();
-  }, [filters]);
+  }, [filters, load]);
 
   const handleFilterChange = (key: string, value: string) => {
     setFilters((f) => ({ ...f, [key]: value }));
